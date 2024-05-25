@@ -21,6 +21,7 @@ yarn.lock
 
 # auto generated
 dist/
+/coverage
 .cache
 es
 lib
