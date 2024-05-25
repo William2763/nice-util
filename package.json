@@ -4,9 +4,17 @@
   "description": "some nice util",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
+  "browser": "dist/umd/index.js",
   "scripts": {
     "build": "rollup -c",
-    "test": "jest"
+    "test": "jest",
+    "test-cov": "jest --coverage"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    }
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^21.0.1",
