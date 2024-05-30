@@ -3,3 +3,4 @@ export * from './isObjEmpty';
 export * from './filterEmptyData';
 export * from './getEnumsArray';
 export * from './trim';
+export * from './getDataType';
