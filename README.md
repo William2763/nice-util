@@ -5,11 +5,11 @@
 
 ## usage
 
-`bash
+```bash
 yarn add nice-util -S
-`
+```
 
-`javascript
+```javascript
 // 导入函数
 import { trim } from 'nice-util';
 
@@ -31,4 +31,4 @@ console.log(trimmedBoth); // 输出: 'Hello, world!'
 // 去除字符串中所有的空格
 const trimmedAll = trim(testString, 'all');
 console.log(trimmedAll); // 输出: 'Hello,world!'
-`
+```
