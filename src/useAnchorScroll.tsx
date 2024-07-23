@@ -10,6 +10,47 @@ export default function useAnchorScroll({
 } = {}) {
     const [sectionId, setSectionId] = useState(defaultSectionId);
     const dataIdRef = useRef('');
+    const lastScrollTopRef = useRef(0);
+
+    const updateActiveSection = (container, sections, currentTop, containerHeight, scrollHeight) => {
+        let newSectionId = sectionId;
+        let sectionChanged = false;
+
+        sections.forEach((item) => {
+            const offsetTop = (item as HTMLElement).offsetTop;
+            const offsetHeight = (item as HTMLElement).offsetHeight;
+
+            if (currentTop + containerHeight >= scrollHeight) {
+                const lastSection = sections[sections.length - 1];
+                if (newSectionId !== lastSection.id) {
+                    newSectionId = lastSection.id;
+                    sectionChanged = true;
+                }
+            } else if (currentTop >= offsetTop && currentTop < offsetTop + offsetHeight) {
+                document
+                    .querySelector(`[data-id=${item.id}]`)
+                    ?.classList.add(activeClass);
+
+                if (newSectionId !== item.id) {
+                    newSectionId = item.id;
+                    sectionChanged = true;
+                }
+            } else {
+                document
+                    .querySelector(`[data-id=${item.id}]`)
+                    ?.classList.remove(activeClass);
+            }
+        });
+
+        // 判断滚动方向，如果是向下滚动才更新 sectionId
+        if (sectionChanged && currentTop > lastScrollTopRef.current) {
+            setSectionId(newSectionId);
+            dataIdRef.current = newSectionId;
+            window.location.hash = newSectionId;
+        }
+
+        lastScrollTopRef.current = currentTop; // 更新上次的滚动位置
+    };
 
     const handleClickMenu = (e) => {
         e.preventDefault();
@@ -21,8 +62,20 @@ export default function useAnchorScroll({
             const sections = container?.querySelectorAll(`.${sectionClass}`);
 
             if (container && sections) {
-                // 检查是否点击的是最后一个部分
+                // 清除之前的高亮
+                document.querySelectorAll(`.${activeClass}`).forEach((el) => {
+                    el.classList.remove(activeClass);
+                });
+
+                // 更新当前点击项的高亮
+                document
+                    .querySelector(`[data-id=${dataId}]`)
+                    ?.classList.add(activeClass);
+
+                // 确保高亮更新后再滚动
+                requestAnimationFrame(() => {
                 if (dataId === (sections[sections.length - 1] as HTMLElement).id) {
+                    // 滚动到底部
                     container.scrollTo({
                         top: container.scrollHeight,
                         behavior: hashBehavior as ScrollBehavior,
@@ -36,20 +89,10 @@ export default function useAnchorScroll({
                 dataIdRef.current = dataId;
                 setSectionId(dataId);
                 window.location.hash = dataId;
+              });
             }
         }
     };
-
-    useLayoutEffect(() => {
-        if (window.location.hash) {
-            const hashId = window.location.hash.replace(/^#/, '');
-            document.getElementById(hashId)?.scrollIntoView({
-                behavior: hashBehavior as ScrollBehavior,
-            });
-            dataIdRef.current = hashId;
-            setSectionId(hashId);
-        }
-    }, [hashBehavior]);
 
     const handleContentScroll = useCallback((el, handleScroll, delayCallback, delay) => {
         let isScrolling;
@@ -76,49 +119,10 @@ export default function useAnchorScroll({
                 const containerHeight = innerContent.clientHeight;
                 const scrollHeight = innerContent.scrollHeight;
                 const sections = innerContent.querySelectorAll(`.${sectionClass}`);
-                let newSectionId = sectionId;
-                let sectionChanged = false;
 
-                sections.forEach((item) => {
-                    const offsetTop = (item as any).offsetTop;
-                    const offsetHeight = (item as any).offsetHeight;
-
-                    if (
-                        currentTop >= offsetTop &&
-                        currentTop < offsetTop + offsetHeight
-                    ) {
-                        document
-                            .querySelector(`[data-id=${item.id}]`)
-                            ?.classList.add(activeClass);
-
-                        if (newSectionId !== item.id) {
-                            newSectionId = item.id;
-                            sectionChanged = true;
-                        }
-                    } else {
-                        document
-                            .querySelector(`[data-id=${item.id}]`)
-                            ?.classList.remove(activeClass);
-                    }
-                });
-
-                if (currentTop + containerHeight >= scrollHeight) {
-                    const lastSection = sections[sections.length - 1];
-                    if (newSectionId !== lastSection.id) {
-                        newSectionId = lastSection.id;
-                        sectionChanged = true;
-                    }
-                }
-
-                if (sectionChanged) {
-                    setSectionId(newSectionId);
-                    dataIdRef.current = newSectionId;
-                    window.location.hash = newSectionId;
-                }
+                updateActiveSection(innerContent, sections, currentTop, containerHeight, scrollHeight);
             },
-            () => {
-                // 这个回调函数可以被移除，因为已经在 handleScroll 中处理了
-            },
+            null,
             scrollDelay
         );
 
