@@ -1,10 +1,11 @@
 {
-  "name": "nice-util",
+  "name": "@william2763/nice-util",
   "version": "1.0.0",
   "description": "some nice util",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "browser": "dist/umd/index.js",
+  "repository":"https://github.com/William2763/nice-util",
   "scripts": {
     "build": "rollup -c",
     "test": "jest",
