@@ -1,6 +1,6 @@
 {
   "name": "@william2763/nice-util",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "some nice util",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
