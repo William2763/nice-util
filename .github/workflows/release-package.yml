@@ -30,13 +30,13 @@ jobs:
         run: yarn build
 
       # Create .npmrc file for GitHub Packages
-      - name: Configure .npmrc
+      - name: Creating .npmrc
         run: |
           cat << EOF > "$HOME/.npmrc"
-            @william2673:registry=https://npm.pkg.github.com
+            @william2763:registry=https://npm.pkg.github.com
             //npm.pkg.github.com/:_authToken=$GITHUB_TOKEN
           EOF
-         env:
+        env:
           GITHUB_TOKEN: ${{ secrets.NPM_GITHUB_TOKEN }}
 
       # Publish the package to GitHub Packages
