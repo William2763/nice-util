@@ -33,7 +33,9 @@ jobs:
       - name: Configure .npmrc
         run: |
           echo "@william2673:registry=https://npm.pkg.github.com" >> ~/.npmrc
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.NPM_GITHUB_TOKEN }}" >> ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ GITHUB_TOKEN }}" >> ~/.npmrc
+        env:
+          GITHUB_TOKEN: ${{ secrets.NPM_GITHUB_TOKEN }}
 
       # Publish the package to GitHub Packages
       - name: Publish to GitHub Packages
@@ -42,4 +44,4 @@ jobs:
         with:
           publish: yarn release
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.NPM_GITHUB_TOKEN }}
