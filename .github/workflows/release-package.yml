@@ -37,8 +37,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.NPM_GITHUB_TOKEN }}
 
       - name: Create Release Pull Request or Publish to Github Packages
-        id: changesets
-        uses: changesets/action@v1
+        uses: actions/setup-node@v4
         with:
           publish: npm publish
         env:
