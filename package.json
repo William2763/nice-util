@@ -1,13 +1,14 @@
 {
   "name": "@william2763/nice-util",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "some nice util",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "browser": "dist/umd/index.js",
-  "repository":"https://github.com/William2763/nice-util",
+  "repository": "https://github.com/William2763/nice-util",
   "scripts": {
     "build": "rollup -c",
+    "release": "changeset publish",
     "test": "jest",
     "test-cov": "jest --coverage"
   },
@@ -30,7 +31,9 @@
     "ts-jest": "^27.0.7",
     "typescript": "^4.4.3"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@changesets/cli": "^2.27.7"
+  },
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node"

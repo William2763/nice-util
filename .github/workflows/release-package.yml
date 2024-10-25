@@ -37,6 +37,9 @@ jobs:
 
       # Publish the package to GitHub Packages
       - name: Publish to GitHub Packages
-        run: npm publish
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          publish: yarn release
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_GITHUB_TOKEN }}
