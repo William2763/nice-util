@@ -4,5 +4,6 @@ export * from './getEnumsArray';
 export * from './getFileExtension';
 export * from './isEqual';
 export * from './isObjEmpty';
+export * from './removeFileExtension';
 export * from './serialize';
 export * from './trim';
